@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t ovolkova/react-test -f ./client/Dockerfile.dev
+
+
+script:
+  - docker run -e CI=true ovolkova/react-test npm test
+
+after_success:
+  - docker build -t ovolkova/myfirst_multi-client ./client
+  - docker build -t ovolkova/myfirst_multi-nginx ./nginx
+  - docker build -t ovolkova/myfirst_multi-server ./server
+  - docker build -t ovolkova/myfirst_multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push ovolkova/myfirst_multi-client
+  - docker push ovolkova/myfirst_multi-nginx
+  - docker push ovolkova/myfirst_multi-server
+  - docker push ovolkova/myfirst_multi-worker
