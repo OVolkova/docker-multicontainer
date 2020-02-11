@@ -1,0 +1,1 @@
+Multi container application (on js) with docker as a toy example of how to build multi-container application
